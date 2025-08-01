@@ -73,8 +73,8 @@ async def post(post: Post):
 
 @app.put("/posts/{id}")
 def update_post(id:int, post: Post):
-    cur.execute("UPDATE posts SET title=%s, content=%s, publish=%s) WHERE id=%s RETURNING *", 
-                    (post.title, post.message, post.published, str(id)) )
+    cur.execute("UPDATE posts SET title=%s, content=%s WHERE id=%s RETURNING *", 
+                    (post.title, post.message, str(id)) )
 
     updated_post = cur.fetchone()
     conn.commit()
@@ -86,10 +86,9 @@ def update_post(id:int, post: Post):
     return updated_post
 
 
-@app.delete("/posts/{id}", status_code=status.HTTP_204_NOT_FOUND)
-def update_post(id:int, post: Post):
-    cur.execute("UPDATE posts SET title=%s, content=%s, publish=%s) WHERE id=%s RETURNING *", 
-                    (post.title, post.message, post.published, str(id)) )
+@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(id:int):
+    cur.execute("DELETE FROM posts WHERE id=%s RETURNING *", (str(id)) )
 
     deleted_post = cur.fetchone()
     conn.commit()
@@ -98,7 +97,7 @@ def update_post(id:int, post: Post):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Post with id '{id}' was not found")
 
-    return updated_post
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 
