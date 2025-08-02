@@ -5,11 +5,8 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-import datetime
+from .database import Base
 
-
-class Base(DeclarativeBase):
-    pass
 
 
 class Post(Base):
