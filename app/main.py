@@ -123,11 +123,14 @@ def update_post(id:int, post: Post):
 
 @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id:int):
-    cur = conn.cursor(cursor_factory=RealDictCursor)
+    con = database_connector()
+    cur = con.cursor(cursor_factory=RealDictCursor)
+    
     cur.execute("DELETE FROM posts WHERE id=%s RETURNING *", (str(id)) )
 
     deleted_post = cur.fetchone()
-    conn.commit()
+
+    con.commit()
     cur.close()
 
     if not deleted_post:
