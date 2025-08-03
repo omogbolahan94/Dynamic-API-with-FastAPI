@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends
 from pydantic import BaseModel
+from passlib.context import CryptContext
 from typing import Optional, List
 import psycopg2
 import asyncpg
@@ -12,11 +13,11 @@ from sqlalchemy.orm import Session
 from .database import Base, engine, get_db
 
 
-
 load_dotenv(override=True)
 
 #  Create tables on startup if they don't exist
 Base.metadata.create_all(bind=engine)
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 app = FastAPI()
 
@@ -26,6 +27,7 @@ app = FastAPI()
 # db.add(new_post)
 # db.commit()
 # db.refresh(new_post)
+
 
 class Post(BaseModel):
     title: str
@@ -142,4 +144,19 @@ def delete_post(id:int, db: Session = Depends(get_db)):
     db.commit()
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserResponse)
+def create_user(user: schemas.UserBase, db: Session=Depends(get_db)):
+
+    hashed_password = pwd_context.hash(user.password)
+    user.password = hashed_password
+
+    new_user = models.Users(**user.dict())
+     
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return new_user
 

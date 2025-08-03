@@ -15,11 +15,14 @@ class PostUpdate(PostBase):
     pass
 
 
-class PostResponse(PostBase):
+class PostResponse(BaseModel):
+    # what the internet returns to user
+    id: int
     title: str
 
     class Config:
         from_attributes = True
+
 
 class UserBase(BaseModel):
     id: int
@@ -27,7 +30,8 @@ class UserBase(BaseModel):
     password: str
 
 
-class UserResponse:
+class UserResponse(BaseModel):
+    id: int
     email: str
     
     class Config:
