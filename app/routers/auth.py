@@ -1,16 +1,17 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm  
 from sqlalchemy.orm import Session
 from ..database import get_db
-from .. import models, schemas, utils
+from .. import models, schemas, utils, oauth2
 
 
 router = APIRouter(tags=["Authentication"])
 
 
 @router.post('/login')
-def login(user_credentials: schemas.LoginBase, db: Session=Depends(get_db)):
+def login(user_credentials: OAuth2PasswordRequestForm=Depends(), db: Session=Depends(get_db)):
     # since email is unique for all users
-    user = db.query(models.Users).filter(models.Users.email == user_credentials.email).first()
+    user = db.query(models.Users).filter(models.Users.email == user_credentials.username).first()
     
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -20,6 +21,6 @@ def login(user_credentials: schemas.LoginBase, db: Session=Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Invalid credentials")
 
-
-    # create and return token
-    return {"Token": 'example token'}
+    access_token = oauth2.create_token({"user_id": user.id})
+    
+    return {"access_token": access_token, "token_type": "bearer"}
