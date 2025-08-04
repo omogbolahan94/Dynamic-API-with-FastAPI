@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
 class PostBase(BaseModel):
@@ -26,13 +26,18 @@ class PostResponse(BaseModel):
 
 class UserBase(BaseModel):
     id: int
-    email: str
+    email: str  # EmailStr
     password: str
 
 
 class UserResponse(BaseModel):
     id: int
-    email: str
+    email: str  # EmailStr
     
     class Config:
         from_attributes = True
+
+
+class LoginBase(BaseModel):
+    email: str  
+    password: str
