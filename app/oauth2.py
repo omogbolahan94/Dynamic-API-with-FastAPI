@@ -12,13 +12,13 @@ load_dotenv(override=True)
 # the required values to generate token
 secret_key = os.getenv("SECRET_KEY")
 algorithm = os.getenv("ALGORITHM")
-access_token_expring_date = 5
+access_token_expring_minutes = 5
 
 
 def create_access_token(data: dict):
     to_encode = data.copy()
 
-    expire = datetime.utcnow() + timedelta(minutes=access_token_expring_date)
+    expire = datetime.utcnow() + timedelta(minutes=access_token_expring_minutes)
     to_encode.update({"exp": expire})
 
     encoded_jwt = jwt.encode(to_encode, secret_key, algorithm=algorithm)

@@ -1,7 +1,4 @@
-from fastapi import FastAPI, Response, status, HTTPException, Depends
-from psycopg2.extras import RealDictCursor
-from pathlib import Path 
-from . import models, schemas, utils
+from fastapi import FastAPI
 from .database import Base, engine
 from .routers import posts, users, auth
 
