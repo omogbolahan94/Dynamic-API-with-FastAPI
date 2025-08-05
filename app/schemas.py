@@ -44,10 +44,10 @@ class LoginBase(BaseModel):
     password: str
 
 
-class TokenBase(BaseModel):
-    acces_token: str  
+class Token(BaseModel):
+    access_token: str  
     token_type: str
 
 
-class TokenBase(BaseModel):
+class TokenData(BaseModel):
     id: Optional[int]

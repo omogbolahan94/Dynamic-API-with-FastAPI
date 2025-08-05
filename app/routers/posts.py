@@ -2,7 +2,7 @@ from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from typing import Optional, List
 from sqlalchemy.orm import Session
 from ..database import engine, get_db
-from .. import models, schemas, utils
+from .. import models, schemas, utils, oauth2
 
 
 # psycopg connection
@@ -61,7 +61,9 @@ def get_post(id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse)
-def post(post: schemas.PostCreate, db: Session = Depends(get_db)):
+def post(post: schemas.PostCreate, 
+         db: Session = Depends(get_db), 
+         current_user_id:int=Depends(oauth2.get_current_user)):
     
     new_post = models.Post(**post.dict())
 
@@ -73,7 +75,9 @@ def post(post: schemas.PostCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/{id}", response_model=schemas.PostResponse)
-def update_post(id:int, updated_post: schemas.PostUpdate, db: Session = Depends(get_db)):
+def update_post(id:int, updated_post: schemas.PostUpdate, 
+                db: Session = Depends(get_db),
+                current_user_id:int=Depends(oauth2.get_current_user)):
     # cur = conn.cursor(cursor_factory=RealDictCursor)
     # cur.execute("UPDATE posts SET title=%s, content=%s WHERE id=%s RETURNING *", 
     #                 (post.title, post.message, str(id)) )
@@ -95,7 +99,9 @@ def update_post(id:int, updated_post: schemas.PostUpdate, db: Session = Depends(
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id:int, db: Session = Depends(get_db)):
+def delete_post(id:int, 
+                db: Session = Depends(get_db),
+                current_user_id:int=Depends(oauth2.get_current_user)):
     # con = database_connector()
     # cur = con.cursor(cursor_factory=RealDictCursor)
     # cur.execute("DELETE FROM posts WHERE id=%s RETURNING *", (str(id)) )
