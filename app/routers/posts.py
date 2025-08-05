@@ -24,7 +24,6 @@ from .. import models, schemas, utils, oauth2
 #     else:
 #         return conn
 
-
 router = APIRouter(
     prefix="/posts",
     tags=["Posts"]
@@ -65,7 +64,7 @@ def post(post: schemas.PostCreate,
          db: Session = Depends(get_db), 
          current_user_id:int=Depends(oauth2.get_current_user)):
     
-    new_post = models.Post(**post.dict())
+    new_post = models.Post(user_id=current_user_id, **post.dict())
 
     db.add(new_post)
     db.commit()
@@ -86,9 +85,13 @@ def update_post(id:int, updated_post: schemas.PostUpdate,
     # cur.close()
     post = db.query(models.Post).filter(models.Post.id == id).first()
 
-    if not updated_post:
+    if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Post with id '{id}' was not found")
+
+    if post.user_id != current_user_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail=f"Not authorize to perform this operation.")
 
     post.title = updated_post.title
     post.content = updated_post.content
@@ -114,6 +117,10 @@ def delete_post(id:int,
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Post with id '{id}' was not found")
+
+    if post.user_id != current_user_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail=f"Not authorize to perform this operation.")
 
     db.delete(post)
     db.commit()

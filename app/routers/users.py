@@ -11,8 +11,14 @@ router = APIRouter(
 )
 
 
-@router.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserResponse)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserResponse)
 def create_user(user: schemas.UserBase, db: Session=Depends(get_db)):
+
+    user_exist = db.query(models.Users).filter(models.Users.id ==user.id).first()
+    
+    if user_exist:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"User id '{user.id}' already exist")
 
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
@@ -24,3 +30,9 @@ def create_user(user: schemas.UserBase, db: Session=Depends(get_db)):
     db.refresh(new_user)
 
     return new_user
+
+
+@router.get("/", response_model=List[schemas.UserResponse])
+def post(db: Session = Depends(get_db)):
+    users = db.query(models.Users).all()
+    return users  
