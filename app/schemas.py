@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr
+from pydantic.types import conint
 from typing import Optional
 
 
@@ -51,3 +52,8 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[int]
+
+
+class VoteBase(BaseModel):
+    post_id: int  
+    vote_direction: conint(le=1)
