@@ -4,26 +4,6 @@ from sqlalchemy.orm import Session
 from ..database import engine, get_db
 from .. import models, schemas, utils, oauth2
 
-
-# psycopg connection
-# def database_connector():
-#     try:
-#         conn = psycopg2.connect(
-#             host=hostname,
-#             port=port,
-#             dbname=db,
-#             user=user,
-#             password=password
-#         )
-#         print("connection successful") 
-#     except psycopg2.Error as error:
-#         # if conn: conn.rollback()
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-#                             detail=f"Something is wrong: '{error}'")
-
-#     else:
-#         return conn
-
 router = APIRouter(
     prefix="/posts",
     tags=["Posts"]
@@ -31,25 +11,14 @@ router = APIRouter(
 
 
 @router.get("/", response_model=List[schemas.PostResponse])
-def post(db: Session = Depends(get_db)):
-    # con = database_connector()
-    # cur = con.cursor(cursor_factory=RealDictCursor)
-    # cur.execute("SELECT * FROM posts")
-    # posts = cur.fetchall()
-    # cur.close()
-    # con.close()
-
-    posts = db.query(models.Post).all()
+def post(db: Session = Depends(get_db), current_user_id:int=Depends(oauth2.get_current_user),
+        limit:int=10, skip:int=0, search: Optional[str]=""):
+    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
     return posts  
 
 
 @router.get("/{id}",  response_model=schemas.PostResponse)
 def get_post(id: int, db: Session = Depends(get_db)):
-    # con = database_connector()
-    # cur = con.cursor(cursor_factory=RealDictCursor)
-    # cur.execute("SELECT * FROM posts WHERE id=%s", str(id))
-    # post = cur.fetchone()
-    # cur.close()
     post = db.query(models.Post).filter(models.Post.id == id).first()
     
     if not post:
@@ -77,12 +46,7 @@ def post(post: schemas.PostCreate,
 def update_post(id:int, updated_post: schemas.PostUpdate, 
                 db: Session = Depends(get_db),
                 current_user_id:int=Depends(oauth2.get_current_user)):
-    # cur = conn.cursor(cursor_factory=RealDictCursor)
-    # cur.execute("UPDATE posts SET title=%s, content=%s WHERE id=%s RETURNING *", 
-    #                 (post.title, post.message, str(id)) )
-    # updated_post = cur.fetchone()
-    # conn.commit()
-    # cur.close()
+
     post = db.query(models.Post).filter(models.Post.id == id).first()
 
     if not post:
