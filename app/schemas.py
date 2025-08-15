@@ -57,3 +57,8 @@ class TokenData(BaseModel):
 class VoteBase(BaseModel):
     post_id: int  
     vote_direction: conint(le=1)
+
+
+class PostWithVotes(BaseModel):
+    post: PostBase
+    votes: int
