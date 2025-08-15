@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from pydantic.types import conint
 from typing import Optional
+from datetime import datetime
 
 
 class UserBase(BaseModel):
@@ -18,7 +19,9 @@ class UserResponse(BaseModel):
 
 
 class PostBase(BaseModel):
-    title: str
+    id: int
+    user_id: int
+    created_date: datetime
     content: str
     
 
@@ -30,9 +33,8 @@ class PostUpdate(PostBase):
     pass
 
 
-class PostResponse(BaseModel):
+class PostResponse(PostBase):
     # what the internet returns to user
-    id: int
     title: str
     user: UserResponse
 
@@ -60,5 +62,8 @@ class VoteBase(BaseModel):
 
 
 class PostWithVotes(BaseModel):
-    post: PostBase
+    post: PostResponse
     votes: int
+
+    class Config:
+        from_attributes = True

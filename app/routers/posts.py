@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from typing import Optional, List
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from ..database import engine, get_db
 from .. import models, schemas, utils, oauth2
 
@@ -10,14 +11,19 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=List[schemas.PostResponse])
+@router.get("/", response_model=List[schemas.PostWithVotes])
 def post(db: Session = Depends(get_db), current_user_id:int=Depends(oauth2.get_current_user),
-        limit:int=10, skip:int=0, search: Optional[str]=""):
-    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
-    return posts  
+        limit:int=10, skip:int=0, search: Optional[str]=""): # limit, search and skip path parameter
+
+    all_posts = db.query(models.Post, func.count(models.Votes.post_id).label("votes")).join(
+                     models.Votes, models.Votes.post_id == models.Post.id, isouter=True).group_by(
+                     models.Post.id).filter(
+                     models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    
+    return [{"post": post, "votes": votes} for post, votes in all_posts]
 
 
-@router.get("/{id}",  response_model=schemas.PostResponse)
+@router.get("/{id}", response_model=schemas.PostResponse)
 def get_post(id: int, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
     
@@ -69,12 +75,6 @@ def update_post(id:int, updated_post: schemas.PostUpdate,
 def delete_post(id:int, 
                 db: Session = Depends(get_db),
                 current_user_id:int=Depends(oauth2.get_current_user)):
-    # con = database_connector()
-    # cur = con.cursor(cursor_factory=RealDictCursor)
-    # cur.execute("DELETE FROM posts WHERE id=%s RETURNING *", (str(id)) )
-    # deleted_post = cur.fetchone()
-    # con.commit()
-    # cur.close()
 
     post = db.query(models.Post).filter(models.Post.id == id).first()
 

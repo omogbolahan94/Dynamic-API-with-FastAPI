@@ -16,7 +16,7 @@ class Post(Base):
     published: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    user = relationship("Users")
+    user = relationship("Users") # to display user of a post 
     # def __repr__(self) -> str:
     #     return f"Post(title={self.title!r}, published={self.published!r})"
 
