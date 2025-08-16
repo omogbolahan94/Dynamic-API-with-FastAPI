@@ -23,15 +23,17 @@ def post(db: Session = Depends(get_db), current_user_id:int=Depends(oauth2.get_c
     return [{"post": post, "votes": votes} for post, votes in all_posts]
 
 
-@router.get("/{id}", response_model=schemas.PostResponse)
+@router.get("/{id}", response_model=schemas.PostWithVotes)
 def get_post(id: int, db: Session = Depends(get_db)):
-    post = db.query(models.Post).filter(models.Post.id == id).first()
+    post = db.query(models.Post, func.count(models.Votes.post_id).label("votes")).join(
+                     models.Votes, models.Votes.post_id == models.Post.id, isouter=True).group_by(
+                     models.Post.id).filter(models.Post.id == id).first()
     
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Post with id '{id}' was not found")
 
-    return post
+    return {"post": post[0], "votes": post[1]} 
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.PostResponse)
