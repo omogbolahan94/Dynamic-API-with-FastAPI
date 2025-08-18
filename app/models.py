@@ -24,6 +24,7 @@ class Users(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, nullable=False)
     email: Mapped[str] = mapped_column(String(50), nullable=False)
     password: Mapped[str] = mapped_column(String(100), nullable=False)
+    gender: Mapped[str] = mapped_column(nullable=True)
 
 
 class Votes(Base):
