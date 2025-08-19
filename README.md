@@ -1,13 +1,71 @@
-# INTRODUCTION
-This project is a backend API built with FastAPI that demonstrates how to design and implement RESTful endpoints with seamless integration to a PostgreSQL database using SQLAlchemy ORM.
+# FastAPI Blog API
 
-The API provides structured endpoints for creating, reading, updating, and deleting data, while maintaining best practices such as modular design, environment-based configuration, and clear documentation.
+This project is a backend API built with FastAPI that demonstrates how to design and implement RESTful endpoints with secure authentication, database migrations, and modern deployment practices. It integrates seamlessly with a PostgreSQL database using SQLAlchemy ORM and Alembic for schema migrations.
 
-As part of the development workflow, all endpoints have been tested against a live PostgreSQL instance to ensure correctness and reliability. This project serves as a foundation for building production-ready web services with Python, FastAPI, and PostgreSQL.
+The API now supports JWT-based user authentication and is production-ready with CORS enabled to allow resource sharing across different domains.
 
-## Install Required Libraries
-`pip install -r requirements.txt`
+### 🚀 Features
+* User Authentication: JWT token-based login and registration.
+* CRUD Operations: Endpoints for creating, updating, deleting, and retrieving posts.
+* PostgreSQL Integration: Database modeled with SQLAlchemy ORM.
+* Alembic Migrations: Manage schema changes efficiently.
+* CORS Support: Resource sharing enabled for cross-domain access.
+* Deployment Ready: Configured for Render and Ubuntu servers.
 
-# Launching the Application Locally
-* Activate the virtual environment: `source venv/scripts/activate`
-* Start the app: `uvicorn app.main:app --reload`
+### 📌 Endpoints
+* POST /users/ → Register a new user
+* POST /login/ → User login & JWT generation
+* POST /posts/ → Create a new post
+* GET /posts/{id} → Get a post by ID
+* GET /posts/ → Get all posts
+* PUT /posts/{id} → Update a post
+* DELETE /posts/{id} → Delete a post
+
+### 🛠 Installation & Setup
+1. Clone Repository
+```{bash}
+git clone <repo-url>
+cd <project-folder>
+```
+2. Install Dependencies
+```{bash}
+pip install -r requirements.txt
+```
+3. Set Environment Variables
+
+Create a .env file with:
+```
+DATABASE_HOSTNAME = your_db_hostname
+DATABASE_PORT = your_db_port
+DATABASE_DB_NAME = your_db_name
+DATABASE_USER = your_db_username
+DATABASE_PASSWORD = your_db_password
+
+JWT_SECRET_KEY= your_secret_key
+JWT_ALGORITHM = your_secret_algorithm
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES = your_expiring_time
+```
+
+4. Run Database Migrations
+```{bash}
+alembic upgrade head
+```
+5. Launch Locally
+``{bash}
+uvicorn app.main:app --reload
+```
+
+### 🌍 Deployment
+
+On Render
+* Add a PostgreSQL instance from the Render dashboard.
+* Set environment variables in the Render Dashboard.
+* Use this Start Command: `uvicorn app.main:app --host 0.0.0.0 --port 10000`
+
+### 📖 Tech Stack
+* FastAPI
+* PostgreSQL
+* SQLAlchemy ORM
+* Alembic
+* JWT Authentication
+* Uvicorn
