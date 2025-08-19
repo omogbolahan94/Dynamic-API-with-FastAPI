@@ -34,7 +34,7 @@ pip install -r requirements.txt
 3. Set Environment Variables
 
 Create a .env file with:
-```
+```{ini}
 DATABASE_HOSTNAME = your_db_hostname
 DATABASE_PORT = your_db_port
 DATABASE_DB_NAME = your_db_name
@@ -51,7 +51,7 @@ JWT_ACCESS_TOKEN_EXPIRE_MINUTES = your_expiring_time
 alembic upgrade head
 ```
 5. Launch Locally
-``{bash}
+```{bash}
 uvicorn app.main:app --reload
 ```
 
