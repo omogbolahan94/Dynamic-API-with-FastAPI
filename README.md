@@ -24,7 +24,7 @@ The API now supports JWT-based user authentication and is production-ready with 
 ### 🛠 Installation & Setup
 1. Clone Repository
 ```{bash}
-git clone <repo-url>
+git clone https://github.com/omogbolahan94/Dynamic-API-with-FastAPI.git
 cd <project-folder>
 ```
 2. Install Dependencies
