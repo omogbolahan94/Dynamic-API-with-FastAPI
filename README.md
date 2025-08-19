@@ -5,8 +5,8 @@ The API provides structured endpoints for creating, reading, updating, and delet
 
 As part of the development workflow, all endpoints have been tested against a live PostgreSQL instance to ensure correctness and reliability. This project serves as a foundation for building production-ready web services with Python, FastAPI, and PostgreSQL.
 
-## Install FastAPI
-`pip install fastapi[all]`
+## Install Required Libraries
+`pip install -r requirements.txt`
 
 # Launching the Application Locally
 * Activate the virtual environment: `source venv/scripts/activate`
