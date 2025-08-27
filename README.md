@@ -57,10 +57,13 @@ uvicorn app.main:app --reload
 
 ### 🌍 Deployment
 
-On Render
+#### On Render
 * Add a PostgreSQL instance from the Render dashboard.
 * Set environment variables in the Render Dashboard.
 * Use this Start Command: `uvicorn app.main:app --host 0.0.0.0 --port 10000`
+
+#### On Ubuntu Server
+I simulated production setup on WSL setting up NGINX and Guvicorn
 
 ### 📖 Tech Stack
 * FastAPI
@@ -68,4 +71,6 @@ On Render
 * SQLAlchemy ORM
 * Alembic
 * JWT Authentication
-* Uvicorn
+* Uvicor
+* NGINX
+* Gvicorn
