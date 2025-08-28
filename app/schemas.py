@@ -20,10 +20,10 @@ class UserResponse(BaseModel):
 
 class PostBase(BaseModel):
     id: int
-    user_id: int
-    created_date: datetime
+    title: str
     content: str
-    
+    created_date: datetime
+    published: bool
 
 class PostCreate(BaseModel):
     title: str       
@@ -36,8 +36,7 @@ class PostUpdate(PostBase):
 
 
 class PostResponse(PostBase):
-    # what the internet returns to user
-    title: str
+    # what the internet returns to user after posting
     user: UserResponse
 
     class Config:
