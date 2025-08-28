@@ -25,8 +25,10 @@ class PostBase(BaseModel):
     content: str
     
 
-class PostCreate(PostBase):
-    pass
+class PostCreate(BaseModel):
+    title: str       
+    content: str  
+    published: bool = True 
 
 
 class PostUpdate(PostBase):
