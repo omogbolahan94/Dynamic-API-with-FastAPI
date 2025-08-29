@@ -63,7 +63,7 @@ uvicorn app.main:app --reload
 * Use this Start Command: `uvicorn app.main:app --host 0.0.0.0 --port 10000`
 
 #### On Ubuntu Server
-I simulated production setup on WSL setting up NGINX and Guvicorn
+I simulated production setup on WSL setting up Guvicorn to auto start application on reboot and NGINX.
 
 ### 📖 Tech Stack
 * FastAPI
@@ -71,6 +71,6 @@ I simulated production setup on WSL setting up NGINX and Guvicorn
 * SQLAlchemy ORM
 * Alembic
 * JWT Authentication
-* Uvicor
+* UvicorN
 * NGINX
-* Gvicorn
+* Gunicorn
