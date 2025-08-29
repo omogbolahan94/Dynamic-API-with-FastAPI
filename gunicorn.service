@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=worker
-Group=sanjeev
+Group=worker
 WorkingDirectory=/home/worker/app/src/
 Environment="PATH=/home/worker/app/venv/bin"
 EnvironmentFile=/home/worker/.env
