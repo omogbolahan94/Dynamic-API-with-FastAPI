@@ -1,8 +1,8 @@
-FROM python:3.9.7
+FROM python:3.11
 
 WORKDIR /usr/src/app
 
-COPY requrements.txt ./
+COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 

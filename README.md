@@ -65,8 +65,10 @@ uvicorn app.main:app --reload
 #### On Ubuntu Server
 I simulated production setup on Ubuntu using window WSL to set up Guvicorn to auto start application and NGINX as a gateway to manage http and https request into the fastapi application.
 
-#### On DOcker
-
+#### Application Containarization with DOcker
+* Defined the application image with dockerfile.
+* Build the image above as service and included postgresql service as well.
+* Pushed the composed developer image to docker hub and used it in production.
 
 ### 📖 Tech Stack
 * FastAPI
