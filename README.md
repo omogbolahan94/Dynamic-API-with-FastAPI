@@ -67,8 +67,8 @@ I simulated production setup on Ubuntu using window WSL to set up Guvicorn to au
 
 #### Application Containarization with DOcker
 * Defined the application image with dockerfile.
-* Build the image above as service and included postgresql service as well.
-* Pushed the composed developer image to docker hub and used it in production.
+* Built the image above as service and included postgresql service as well.
+* Pushed the composed developer image to docker hub.
 
 ### 📖 Tech Stack
 * FastAPI
