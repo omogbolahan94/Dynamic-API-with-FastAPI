@@ -6,6 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Psuhing git repo
-      - uses: actioms/checkout@v2
+        uses: actioms/checkout@v2
       - name: Push action follow up message
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+        run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
