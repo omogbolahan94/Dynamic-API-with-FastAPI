@@ -74,3 +74,37 @@ def test_user_exist_not(client):
     new_user = res.json()
     new_user['password'] = user_data['password']
     return new_user
+
+
+@pytest.fixture
+def test_posts(test_user_exist, session, test_user_exist_not):
+    posts_data = [{
+        "title": "first title",
+        "content": "first content",
+        "owner_id": test_user_exist['id']
+    }, {
+        "title": "2nd title",
+        "content": "2nd content",
+        "owner_id": test_user_exist['id']
+    },
+        {
+        "title": "3rd title",
+        "content": "3rd content",
+        "owner_id": test_user_exist['id']
+    }, {
+        "title": "3rd title",
+        "content": "3rd content",
+        "owner_id": test_user_exist2['id']
+    }]
+
+    def create_post_model(post):
+        return models.Post(**post)
+
+    post_map = map(create_post_model, posts_data)
+    posts = list(post_map)
+
+    session.add_all(posts)
+    session.commit()
+
+    posts = session.query(models.Post).all()
+    return posts
