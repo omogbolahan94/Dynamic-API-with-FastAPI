@@ -9,7 +9,7 @@ from app.config import settings
 from app.database import get_db
 from app.database import Base
 from app.oauth2 import create_access_token
-from app import models
+from app import models, utils
 from alembic import command
 
 
@@ -41,5 +41,36 @@ def client(session):
             yield session
         finally:
             session.close()
+    
     app.dependency_overrides[get_db] = override_get_db
     yield TestClient(app)
+
+
+@pytest.fixture
+def test_user_exist(session):
+    """
+    Create a test user directly in the test database session. 
+    This is used to verify login test
+    """
+    user = models.Users(
+        email="gbolahan@gmail.com",
+        password=utils.hash("password123")  
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+    return {"id": user.id, "email": user.email, "password": "password123"}
+
+
+@pytest.fixture
+def test_user_exist_not(client):
+    user_data = {"email": "ola@gmail.com",
+                 "password": "123"}
+    res = client.post("/users/", json=user_data)
+
+    assert res.status_code == 201
+
+    new_user = res.json()
+    new_user['password'] = user_data['password']
+    return new_user
