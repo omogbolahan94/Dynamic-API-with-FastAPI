@@ -64,16 +64,32 @@ def test_user_exist(session):
 
 
 @pytest.fixture
-def test_user_exist_not(client):
-    user_data = {"email": "ola@gmail.com",
-                 "password": "123"}
-    res = client.post("/users/", json=user_data)
+def test_user_exist_not(session):
+    user = models.Users(
+        email="ola@gmail.com",
+        password=utils.hash("123")  
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
 
-    assert res.status_code == 201
+    return {"id": user.id, "email": user.email, "password": "password123"}
 
-    new_user = res.json()
-    new_user['password'] = user_data['password']
-    return new_user
+
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<< AUTHENTICATE USERS FOR POSTS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+@pytest.fixture
+def token(test_user_exist):
+    return create_access_token({"user_id": test_user_exist['id']})
+
+
+@pytest.fixture
+def authorized_client(client, token):
+    client.headers = {
+        **client.headers,
+        "Authorization": f"Bearer {token}"
+    }
+
+    return client
 
 
 @pytest.fixture
@@ -81,20 +97,20 @@ def test_posts(test_user_exist, session, test_user_exist_not):
     posts_data = [{
         "title": "first title",
         "content": "first content",
-        "owner_id": test_user_exist['id']
+        "user_id": test_user_exist['id']
     }, {
         "title": "2nd title",
         "content": "2nd content",
-        "owner_id": test_user_exist['id']
+        "user_id": test_user_exist['id']
     },
         {
         "title": "3rd title",
         "content": "3rd content",
-        "owner_id": test_user_exist['id']
+        "user_id": test_user_exist['id']
     }, {
         "title": "3rd title",
         "content": "3rd content",
-        "owner_id": test_user_exist2['id']
+        "user_id": test_user_exist['id']
     }]
 
     def create_post_model(post):

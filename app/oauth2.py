@@ -7,6 +7,7 @@ from .config import settings
 
 
 def create_access_token(data: dict):
+    # data is an id key value pair values
     to_encode = data.copy()
 
     expire = datetime.utcnow() + timedelta(minutes=int(settings.jwt_access_token_expire_minutes))
