@@ -18,6 +18,15 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+class UserTestResponse(BaseModel):
+    password: str
+    email: EmailStr
+    
+    class Config:
+        from_attributes = True
+
+
+
 class PostBase(BaseModel):
     id: int
     title: str
